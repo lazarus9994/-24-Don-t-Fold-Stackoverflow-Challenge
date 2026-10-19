@@ -3,9 +3,7 @@ import org.json.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Main {
@@ -32,17 +30,13 @@ public class Main {
 
         JSONArray pokerHands = data.getJSONArray("poker_hands");
 
-        JSONArray cards =  new JSONArray();
+        JSONArray hand =  new JSONArray();
 
-        Map<String,String> pokerCards = new HashMap<>();
+        Map<String, List<String>> hands = new HashMap<>();
 
         for (int i = 0; i < pokerHands.length(); i++) {
-            cards = pokerHands.getJSONObject(i).getJSONArray("cards");
-
-            for (int j = 0; j < cards.length(); j++) {
-                JSONObject card = cards.getJSONObject(j);
-                pokerCards.put(card.getString("suit"), card.getString("rank"));
-            }
+            hand = pokerHands.getJSONObject(i).getJSONArray("cards");
+            
         }
 
     }
