@@ -141,4 +141,53 @@ public class Main {
 
         return false;
     }
+
+    public boolean fullHouse(Hand hand) {
+
+        boolean threeOfAKind = false;
+        boolean twoOfAKind = false;
+
+
+        hand.getCards().sort(Comparator.comparing(Card::getRank));
+
+        Card card = hand.getCards().getFirst();
+
+        int counter = 1;
+
+        for (int i = 1; i < hand.getCards().size(); i++) {
+            if (card.getRank().equals(hand.getCards().get(i).getRank())) {
+                counter++;
+            }else {
+                if (counter == 2) {
+                    twoOfAKind = true;
+                    counter = 1;
+                }
+                if (counter == 3) {
+                    threeOfAKind = true;
+                    counter = 1;
+                }
+
+                if (counter > 3) {
+                    return false;
+                }
+                card = hand.getCards().get(i);
+            }
+        }
+        if (counter == 2) {
+            twoOfAKind = true;
+            counter = 1;
+        }
+        if (counter == 3) {
+            threeOfAKind = true;
+            counter = 1;
+        }
+
+        if (counter > 3) {
+            return false;
+        }
+
+
+        return threeOfAKind && twoOfAKind;
+
+    }
 }
