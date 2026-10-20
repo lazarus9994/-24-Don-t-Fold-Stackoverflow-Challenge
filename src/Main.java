@@ -53,58 +53,92 @@ public class Main {
             
         }
 
-        Map<PokerHandRank, Boolean> map = new HashMap<>();
-
         System.out.println(handList.size());
 
     }
 
     public boolean RoyalFlush(Hand hand) {
+
+        if(hand.getCards().stream().min(Comparator.comparing(Card::getRank)).get().getRank().getValue() < 10){
+            return false;
+        }
+        return flush(hand) && straight(hand);
+    }
+
+    public boolean StraightFlush(Hand hand) {
+        if(hand.getCards().stream().anyMatch(card -> card.getRank().getValue() == 14 && hand.getCards().stream().anyMatch(card1 -> card1.getRank().getValue() == 13))){
+            return false;
+        }
+        return flush(hand) && straight(hand);
+    }
+
+    public boolean flush(Hand hand) {
         Suit suit = hand.getCards().getFirst().getSuit();
         for (Card card : hand.getCards()){
             if (!card.getSuit().equals(suit)){
-                return false;
-            }
-            if(!(card.getRank().getValue() >= 10)){
                 return false;
             }
         }
         return true;
     }
 
-    public boolean StraightFlush(Hand hand) {
-        Suit suit = hand.getCards().getFirst().getSuit();
-        for (Card card : hand.getCards()){
-            if (!card.getSuit().equals(suit)){
-                return false;
+    public boolean straight(Hand hand) {
+        boolean isAceInHand = hand.getCards().stream().anyMatch(card -> card.getRank().getValue() == 14);
+
+        if (!isAceInHand){
+            Card card = hand.getCards().stream().min(Comparator.comparing(Card::getRank)).get();
+            int count = 1;
+
+            for(int i = 0; i < hand.getCards().size(); i++) {
+                if (hand.getCards().get(i).getRank().getValue() == card.getRank().getValue() + 1){
+                    card = hand.getCards().get(i);
+                    count++;
+                    i = -1;
+                }
+
+                if (count == 5){
+                    return true;
+                }
             }
         }
 
-        Card card = hand.getCards().stream().min(Comparator.comparing(Card::getRank)).get();
-        int count = 1;
+        if (isAceInHand){
 
-        for(int i = 0; i < hand.getCards().size(); i++) {
-            if (hand.getCards().get(i).getRank().getValue() == card.getRank().getValue() + 1){
-                card = hand.getCards().get(i);
-                count++;
-                i = -1;
+            if(hand.getCards().stream().anyMatch(card1 -> card1.getRank().getValue() == 13)){
+                Card card = hand.getCards().stream().filter(card1 -> card1.getRank().getValue() == 13).findFirst().get();
+                int count = 2;
+
+                for(int i = 0; i < hand.getCards().size(); i++) {
+                    if (hand.getCards().get(i).getRank().getValue() == card.getRank().getValue() - 1){
+                        card = hand.getCards().get(i);
+                        count++;
+                        i = -1;
+                    }
+
+                    if (count == 5){
+                        return true;
+                    }
+                }
             }
 
-            if (count == 5){
-                return true;
+            if(hand.getCards().stream().anyMatch(card1 -> card1.getRank().getValue() == 2)){
+                Card card = hand.getCards().stream().filter(card1 -> card1.getRank().getValue() == 2).findFirst().get();
+                int count = 2;
+
+                for(int i = 0; i < hand.getCards().size(); i++) {
+                    if (hand.getCards().get(i).getRank().getValue() == card.getRank().getValue() + 1){
+                        card = hand.getCards().get(i);
+                        count++;
+                        i = -1;
+                    }
+
+                    if (count == 5){
+                        return true;
+                    }
+                }
             }
         }
 
         return false;
-    }
-
-    public boolean Flush(Hand hand) {
-        Suit suit = hand.getCards().getFirst().getSuit();
-        for (Card card : hand.getCards()){
-            if (!card.getSuit().equals(suit)){
-                return false;
-            }
-        }
-        return true;
     }
 }
