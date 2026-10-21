@@ -147,47 +147,40 @@ public class Main {
         boolean threeOfAKind = false;
         boolean twoOfAKind = false;
 
-
-        hand.getCards().sort(Comparator.comparing(Card::getRank));
-
-        Card card = hand.getCards().getFirst();
-
         int counter = 1;
 
-        for (int i = 1; i < hand.getCards().size(); i++) {
-            if (card.getRank().equals(hand.getCards().get(i).getRank())) {
-                counter++;
-            }else {
-                if (counter == 2) {
-                    twoOfAKind = true;
-                    counter = 1;
-                }
-                if (counter == 3) {
-                    threeOfAKind = true;
-                    counter = 1;
-                }
+        int threeOfAKindCard = 0;
+        int twoOfAKindCard = 0;
 
-                if (counter > 3) {
-                    return false;
+        for (int i = 0; i < hand.getCards().size(); i++) {
+
+            if (threeOfAKindCard != 0 && hand.getCards().get(i).getRank().getValue() == threeOfAKindCard) {
+                continue;
+            }
+
+            if (twoOfAKindCard != 0 && hand.getCards().get(i).getRank().getValue() == twoOfAKindCard) {
+                continue;
+            }
+
+            for (int j = i + 1; j < hand.getCards().size(); j++) {
+                if (hand.getCards().get(i).getRank().getValue() == hand.getCards().get(j).getRank().getValue()){
+                    counter++;
                 }
-                card = hand.getCards().get(i);
+            }
+
+            if (counter == 3){
+                threeOfAKindCard = hand.getCards().get(i).getRank().getValue();
+                threeOfAKind = true;
+                counter = 1;
+            }
+
+            if (counter == 2){
+                twoOfAKindCard = hand.getCards().get(i).getRank().getValue();
+                twoOfAKind = true;
+                counter = 1;
             }
         }
-        if (counter == 2) {
-            twoOfAKind = true;
-            counter = 1;
-        }
-        if (counter == 3) {
-            threeOfAKind = true;
-            counter = 1;
-        }
-
-        if (counter > 3) {
-            return false;
-        }
-
 
         return threeOfAKind && twoOfAKind;
-
     }
 }
