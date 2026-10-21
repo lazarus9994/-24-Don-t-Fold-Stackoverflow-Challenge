@@ -142,6 +142,27 @@ public class Main {
         return false;
     }
 
+    public boolean fourOfAKind(Hand hand) {
+        int counter = 1;
+
+        for (int i = 0; i < hand.getCards().size(); i++) {
+            Card card = hand.getCards().get(i);
+            for (int j = i + 1; j < hand.getCards().size(); j++) {
+                if (card.getRank().equals(hand.getCards().get(j).getRank())){
+                    counter++;
+                }
+            }
+
+            if (counter == 4){
+                return true;
+            }else {
+                counter = 1;
+            }
+        }
+
+        return false;
+    }
+
     public boolean fullHouse(Hand hand) {
 
         boolean threeOfAKind = false;
@@ -183,4 +204,6 @@ public class Main {
 
         return threeOfAKind && twoOfAKind;
     }
+
+
 }
