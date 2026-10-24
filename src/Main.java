@@ -53,11 +53,55 @@ public class Main {
             
         }
 
-        System.out.println(handList.size());
+        int totalSum = 0;
+
+        for(Hand handEntity : handList) {
+            if (royalFlush(handEntity)){
+                totalSum += PokerHandRank.ROYAL_FLUSH.getValue();
+                continue;
+            }
+            if (straightFlush(handEntity)){
+                totalSum += PokerHandRank.STRAIGHT_FLUSH.getValue();
+                continue;
+            }
+            if(fourOfAKind(handEntity)){
+                totalSum += PokerHandRank.FOUR_OF_A_KIND.getValue();
+                continue;
+            }
+            if (fullHouse(handEntity)){
+                totalSum += PokerHandRank.FULL_HOUSE.getValue();
+                continue;
+            }
+            if (flush(handEntity)){
+                totalSum += PokerHandRank.FLUSH.getValue();
+                continue;
+            }
+            if (straight(handEntity)){
+                totalSum += PokerHandRank.STRAIGHT.getValue();
+                continue;
+            }
+            if (threeOfAKind(handEntity)){
+                totalSum += PokerHandRank.THREE_OF_A_KIND.getValue();
+                continue;
+            }
+            if (twoPair(handEntity)){
+                totalSum += PokerHandRank.TWO_PAIR.getValue();
+                continue;
+            }
+            if (onePair(handEntity)){
+                totalSum += PokerHandRank.ONE_PAIR.getValue();
+                continue;
+            }
+            if (highCard(handEntity)){
+                totalSum += PokerHandRank.HIGH_CARD.getValue();
+            }
+        }
+
+        System.out.println(totalSum);
 
     }
 
-    public boolean RoyalFlush(Hand hand) {
+    public static boolean royalFlush(Hand hand) {
 
         if(hand.getCards().stream().min(Comparator.comparing(Card::getRank)).get().getRank().getValue() < 10){
             return false;
@@ -65,14 +109,14 @@ public class Main {
         return flush(hand) && straight(hand);
     }
 
-    public boolean StraightFlush(Hand hand) {
+    public static boolean straightFlush(Hand hand) {
         if(hand.getCards().stream().anyMatch(card -> card.getRank().getValue() == 14 && hand.getCards().stream().anyMatch(card1 -> card1.getRank().getValue() == 13))){
             return false;
         }
         return flush(hand) && straight(hand);
     }
 
-    public boolean flush(Hand hand) {
+    public static boolean flush(Hand hand) {
         Suit suit = hand.getCards().getFirst().getSuit();
         for (Card card : hand.getCards()){
             if (!card.getSuit().equals(suit)){
@@ -82,7 +126,7 @@ public class Main {
         return true;
     }
 
-    public boolean straight(Hand hand) {
+    public static boolean straight(Hand hand) {
         boolean isAceInHand = hand.getCards().stream().anyMatch(card -> card.getRank().getValue() == 14);
 
         if (!isAceInHand){
@@ -142,7 +186,7 @@ public class Main {
         return false;
     }
 
-    public boolean fourOfAKind(Hand hand) {
+    public static boolean fourOfAKind(Hand hand) {
         int counter = 1;
 
         for (int i = 0; i < hand.getCards().size(); i++) {
@@ -163,7 +207,7 @@ public class Main {
         return false;
     }
 
-    public boolean fullHouse(Hand hand) {
+    public static boolean fullHouse(Hand hand) {
 
         boolean threeOfAKind = false;
         boolean twoOfAKind = false;
@@ -205,7 +249,7 @@ public class Main {
         return threeOfAKind && twoOfAKind;
     }
 
-    public boolean threeOfAKind(Hand hand) {
+    public static boolean threeOfAKind(Hand hand) {
         int counter = 1;
 
         hand.getCards().sort(Comparator.comparing(Card::getRank));
@@ -226,7 +270,7 @@ public class Main {
         return false;
     }
 
-    public boolean twoPair(Hand hand) {
+    public static boolean twoPair(Hand hand) {
         hand.getCards().sort(Comparator.comparing(Card::getRank));
         Card card = hand.getCards().getFirst();
 
@@ -249,7 +293,7 @@ public class Main {
     }
 
 
-    public boolean onePair(Hand hand) {
+    public static boolean onePair(Hand hand) {
         hand.getCards().sort(Comparator.comparing(Card::getRank));
         Card card = hand.getCards().getFirst();
 
@@ -270,7 +314,7 @@ public class Main {
         return counter == 1;
     }
 
-    public boolean highCard(Hand hand) {
+    public static boolean highCard(Hand hand) {
 
         return !straight(hand) && !flush(hand) && !threeOfAKind(hand) && !fourOfAKind(hand) && !fullHouse(hand) && !twoPair(hand) && !onePair(hand);
     }
