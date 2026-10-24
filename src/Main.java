@@ -205,5 +205,74 @@ public class Main {
         return threeOfAKind && twoOfAKind;
     }
 
+    public boolean threeOfAKind(Hand hand) {
+        int counter = 1;
+
+        hand.getCards().sort(Comparator.comparing(Card::getRank));
+
+        Card card = hand.getCards().get(0);
+        for (int i = 1; i < hand.getCards().size(); i++) {
+            if (card.getRank().equals(hand.getCards().get(i).getRank())){
+                counter++;
+            } else {
+                card = hand.getCards().get(i);
+                counter = 1;
+            }
+
+            if (counter == 3 && !fourOfAKind(hand) && !fullHouse(hand)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean twoPair(Hand hand) {
+        hand.getCards().sort(Comparator.comparing(Card::getRank));
+        Card card = hand.getCards().getFirst();
+
+        int counter = 0;
+
+        if (threeOfAKind(hand)){
+            return false;
+        }
+
+        for (int i = 1; i < hand.getCards().size(); i++) {
+            if (card.getRank().equals(hand.getCards().get(i).getRank())){
+                counter++;
+            }
+
+            card = hand.getCards().get(i);
+
+        }
+
+        return counter == 2;
+    }
+
+
+    public boolean onePair(Hand hand) {
+        hand.getCards().sort(Comparator.comparing(Card::getRank));
+        Card card = hand.getCards().getFirst();
+
+        int counter = 0;
+
+        if (threeOfAKind(hand) || twoPair(hand)){
+            return false;
+        }
+
+        for (int i = 1; i < hand.getCards().size(); i++) {
+            if (card.getRank().equals(hand.getCards().get(i).getRank())){
+                counter++;
+            }
+
+            card = hand.getCards().get(i);
+        }
+
+        return counter == 1;
+    }
+
+    public boolean highCard(Hand hand) {
+
+        return !straight(hand) && !flush(hand) && !threeOfAKind(hand) && !fourOfAKind(hand) && !fullHouse(hand) && !twoPair(hand) && !onePair(hand);
+    }
 
 }
